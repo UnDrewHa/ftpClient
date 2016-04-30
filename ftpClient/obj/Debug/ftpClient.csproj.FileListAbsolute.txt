@@ -1,0 +1,20 @@
+c:\users\agorohov\documents\visual studio 2015\Projects\ftpClient\ftpClient\bin\Debug\ftpClient.exe.config
+c:\users\agorohov\documents\visual studio 2015\Projects\ftpClient\ftpClient\obj\Debug\ftpClient.csprojResolveAssemblyReference.cache
+c:\users\agorohov\documents\visual studio 2015\Projects\ftpClient\ftpClient\obj\Debug\ftpClient.MainForm.resources
+c:\users\agorohov\documents\visual studio 2015\Projects\ftpClient\ftpClient\obj\Debug\ftpClient.Properties.Resources.resources
+c:\users\agorohov\documents\visual studio 2015\Projects\ftpClient\ftpClient\obj\Debug\ftpClient.csproj.GenerateResource.Cache
+c:\users\agorohov\documents\visual studio 2015\Projects\ftpClient\ftpClient\bin\Debug\ftpClient.exe
+c:\users\agorohov\documents\visual studio 2015\Projects\ftpClient\ftpClient\bin\Debug\ftpClient.pdb
+c:\users\agorohov\documents\visual studio 2015\Projects\ftpClient\ftpClient\obj\Debug\ftpClient.exe
+c:\users\agorohov\documents\visual studio 2015\Projects\ftpClient\ftpClient\obj\Debug\ftpClient.pdb
+C:\Users\agorohov\Documents\Visual Studio 2015\Projects\ftpClient\ftpClient\obj\Debug\ftpClient.makeDirectory.resources
+C:\Users\Эндрю\Desktop\ftpClient\ftpClient\bin\Debug\ftpClient.exe.config
+C:\Users\Эндрю\Desktop\ftpClient\ftpClient\obj\Debug\ftpClient.exe
+C:\Users\Эндрю\Desktop\ftpClient\ftpClient\obj\Debug\ftpClient.pdb
+C:\Users\Эндрю\Desktop\ftpClient\ftpClient\bin\Debug\ftpClient.exe
+C:\Users\Эндрю\Desktop\ftpClient\ftpClient\bin\Debug\ftpClient.pdb
+C:\Users\Эндрю\Desktop\ftpClient\ftpClient\obj\Debug\ftpClient.csprojResolveAssemblyReference.cache
+C:\Users\Эндрю\Desktop\ftpClient\ftpClient\obj\Debug\ftpClient.MainForm.resources
+C:\Users\Эндрю\Desktop\ftpClient\ftpClient\obj\Debug\ftpClient.Properties.Resources.resources
+C:\Users\Эндрю\Desktop\ftpClient\ftpClient\obj\Debug\ftpClient.csproj.GenerateResource.Cache
+C:\Users\Эндрю\Desktop\ftpClient\ftpClient\obj\Debug\ftpClient.dialogBox.resources
