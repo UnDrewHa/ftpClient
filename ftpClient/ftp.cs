@@ -201,6 +201,7 @@ namespace ftpClient {
 
         public List<ftpinfo> browse(string path) //eg: "ftp.xyz.org", "ftp.xyz.org/ftproot/etc"
         {
+
             FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(path);
             request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
             List<ftpinfo> files = new List<ftpinfo>();
@@ -263,17 +264,24 @@ namespace ftpClient {
         }
 
         public string createRemoteDirectory(fileinfo file) {
-            //System.IO.FileInfo info = new FileInfo(file.completeFileName);
-            //This is actually a directory:
-            string filename = file.completeFileName;//.Substring(file.completeFileName.LastIndexOf(@"\") + 1);
-            FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(file.destination);
-            request.Credentials = new NetworkCredential(_username, _password);
-            request.Method = WebRequestMethods.Ftp.MakeDirectory;
-            request.UseBinary = true;
-            FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-            return response.StatusDescription;
-            //request.UseBinary = true;
-            //request.ContentLength = info.Length;
+            try
+            {
+                //System.IO.FileInfo info = new FileInfo(file.completeFileName);
+                //This is actually a directory:
+                string filename = file.completeFileName;//.Substring(file.completeFileName.LastIndexOf(@"\") + 1);
+                FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(file.destination);
+                request.Credentials = new NetworkCredential(_username, _password);
+                request.Method = WebRequestMethods.Ftp.MakeDirectory;
+                request.UseBinary = true;
+                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+                return response.StatusDescription;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка создания папки." + ex.Message);
+            }
+            return "";
+                
         }
 
         public void download(fileinfo file) {
@@ -296,20 +304,6 @@ namespace ftpClient {
             int fileSize = Convert.ToInt32(response.ContentLength);
             try
             {
-                /*
-                int bufferSize=4096;
-                byte[] bytes=new byte[bufferSize];
-                int totBytes=0;
-                int read=0;
-                do
-                {
-                    read = rs.Read(bytes,0,bufferSize);
-                    fs.Write(bytes,0,read);
-                    totBytes+=read;
-                    OnDownloadProgress(file.completeFileName, totBytes, fileSize);
-                    Console.WriteLine(file.completeFileName + " Скачано: " + totBytes);
-                } while (read == bufferSize);
-                */
                 long length = response.ContentLength;
                 int bufferSize = 4096;
                 int readCount;
@@ -336,19 +330,6 @@ namespace ftpClient {
                 fs.Close();
                 rs.Close();
             }
-
-                /*using (WebClient request = new WebClient())
-                {
-                    request.Credentials = new NetworkCredential(_username, _password);
-                    byte[] fileData = request.DownloadData(file.completeFileName);
-
-                    using (FileStream fs = File.Create(file.destination))
-                    {
-                        fs.Write(fileData, 0, fileData.Length);
-                        fs.Close();
-                    }
-                    
-                } */
         }
 
         public void upload(fileinfo file) {
@@ -360,7 +341,7 @@ namespace ftpClient {
             request.UseBinary = true;
             request.ContentLength = info.Length;
 
-            int bufferSize = 2048;
+            int bufferSize = 4096;
             byte[] bytes = new byte[bufferSize];
             int read = 0;
             long totBytes = 0;
@@ -371,12 +352,14 @@ namespace ftpClient {
                         read = fs.Read(bytes, 0, bufferSize);
                         rs.Write(bytes, 0, read);
                         totBytes += read;
-                        //TODO: Raise status event to notify the bytes transferred
                         OnUploadProgress(file.completeFileName, totBytes);
+                        Console.WriteLine("Загружено:" + totBytes);
                     } while (read == bufferSize);
                     OnUploadComplete(file.completeFileName);
                 }
-                catch { }
+                catch (WebException ex) {
+                    MessageBox.Show(ex.Message, "Ошибка при загрузке на сервер");
+                }
                 finally {
                     fs.Close();
                 }

@@ -60,6 +60,7 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.folderBrowser = new System.Windows.Forms.FolderBrowserDialog();
             this.mainMenu.SuspendLayout();
             this.cmsLocal.SuspendLayout();
             this.cmsRemote.SuspendLayout();
@@ -211,30 +212,35 @@
             this.cmsLocalUpload.Name = "cmsLocalUpload";
             this.cmsLocalUpload.Size = new System.Drawing.Size(161, 22);
             this.cmsLocalUpload.Text = "На сервер ->";
+            this.cmsLocalUpload.Click += new System.EventHandler(this.cmsLocalUpload_Click);
             // 
             // cmsLocalRename
             // 
             this.cmsLocalRename.Name = "cmsLocalRename";
             this.cmsLocalRename.Size = new System.Drawing.Size(161, 22);
             this.cmsLocalRename.Text = "Переименовать";
+            this.cmsLocalRename.Click += new System.EventHandler(this.cmsLocalRename_Click);
             // 
             // cmsLocalMove
             // 
             this.cmsLocalMove.Name = "cmsLocalMove";
             this.cmsLocalMove.Size = new System.Drawing.Size(161, 22);
             this.cmsLocalMove.Text = "Переместить";
+            this.cmsLocalMove.Click += new System.EventHandler(this.cmsLocalMove_Click);
             // 
             // cmsLocalDelete
             // 
             this.cmsLocalDelete.Name = "cmsLocalDelete";
             this.cmsLocalDelete.Size = new System.Drawing.Size(161, 22);
             this.cmsLocalDelete.Text = "Удалить";
+            this.cmsLocalDelete.Click += new System.EventHandler(this.cmsLocalDelete_Click);
             // 
             // cmsLocalCreateFolder
             // 
             this.cmsLocalCreateFolder.Name = "cmsLocalCreateFolder";
             this.cmsLocalCreateFolder.Size = new System.Drawing.Size(161, 22);
             this.cmsLocalCreateFolder.Text = "Создать папку";
+            this.cmsLocalCreateFolder.Click += new System.EventHandler(this.cmsLocalCreateFolder_Click);
             // 
             // lvRemote
             // 
@@ -357,9 +363,9 @@
             this.lblRemotePath.AutoSize = true;
             this.lblRemotePath.Location = new System.Drawing.Point(618, 178);
             this.lblRemotePath.Name = "lblRemotePath";
-            this.lblRemotePath.Size = new System.Drawing.Size(13, 17);
+            this.lblRemotePath.Size = new System.Drawing.Size(124, 17);
             this.lblRemotePath.TabIndex = 15;
-            this.lblRemotePath.Text = "/";
+            this.lblRemotePath.Text = "Нет подключения";
             // 
             // statusStrip
             // 
@@ -383,6 +389,10 @@
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(258, 23);
             this.progressBar.TabIndex = 19;
+            // 
+            // folderBrowser
+            // 
+            this.folderBrowser.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
             // MainForm
             // 
@@ -412,6 +422,7 @@
             this.MainMenuStrip = this.mainMenu;
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Simple FTP Client";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.mainMenu.ResumeLayout(false);
@@ -463,6 +474,7 @@
         private System.Windows.Forms.ToolStripMenuItem cmsRemoteDelete;
         private System.Windows.Forms.ToolStripMenuItem cmsRemoteCreateFolder;
         private System.Windows.Forms.ProgressBar progressBar;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowser;
     }
 }
 

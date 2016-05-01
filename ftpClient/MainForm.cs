@@ -22,13 +22,49 @@ namespace ftpClient {
             ftpSet.ftpObject.uploadComplete += new EventHandler<uploadCompleteEventArgs>(ftpobject_uploadComplete);
             ftpSet.ftpObject.deleteComplete += new EventHandler<deleteCompleteEventArgs>(ftpobject_deleteComplete);
             ftpSet.ftpObject.mkDirRemoteComplete += new EventHandler<mkDirRemoteCompleteEventArgs>(ftpobject_mkDirRemoteComplete);
+            FileSystemWatcher fsWatcher = new FileSystemWatcher();
+            fsWatcher.Path = lblLocalPath.Text;
+            fsWatcher.NotifyFilter = NotifyFilters.FileName;
+            fsWatcher.Changed += new FileSystemEventHandler(fsOnChanged);
+            fsWatcher.Created += new FileSystemEventHandler(fsOnCreated);
+            fsWatcher.Deleted += new FileSystemEventHandler(fsOnDeleted);
+            fsWatcher.Renamed += new RenamedEventHandler(fsOnRenamed);
+            fsWatcher.EnableRaisingEvents = true;
+        }
+
+        void fsOnChanged(object source, FileSystemEventArgs e)
+        {
+            // Specify what is done when a file is changed, created, or deleted.
+            Console.WriteLine("File: " + e.FullPath + " " + e.ChangeType);
+            
+            
+        }
+        void fsOnCreated(object source, FileSystemEventArgs e)
+        {
+            // Specify what is done when a file is changed, created, or deleted.
+            Console.WriteLine("File: " + e.FullPath + " " + e.ChangeType);
+            
+        }
+        void fsOnDeleted(object source, FileSystemEventArgs e)
+        {
+            // Specify what is done when a file is changed, created, or deleted.
+            Console.WriteLine("File: " + e.FullPath + " " + e.ChangeType);
+            
+        }
+        void fsOnRenamed(object source, FileSystemEventArgs e)
+        {
+            // Specify what is done when a file is changed, created, or deleted.
+            Console.WriteLine("File: " + e.FullPath + " " + e.ChangeType);
+            
         }
 
         void ftpobject_downloadProgress(object sender, downloadProgressEventArgs e)
         {
+            /*
             int step = (e.bytesTransferred / e.totalBytes)/100;
             progressBar.Step = e.bytesTransferred;
             progressBar.Maximum = e.totalBytes;
+            */
             
         }
         void ftpobject_mkDirRemoteComplete(object sender, mkDirRemoteCompleteEventArgs e) {
@@ -80,7 +116,8 @@ namespace ftpClient {
             foreach (FileInfo fi in di.GetFiles()) {
                 lvLocal.Items.Add(fi.Name, (int)directionEntryTypes.file);
             }
-        }
+            }
+
 
         void refreshRemote() {
             List<ftpinfo> files = ftpSet.browse(tboxServerUrl.Text + lblRemotePath.Text);
@@ -162,16 +199,19 @@ namespace ftpClient {
         private void cmsRemoteDownload_Click(object sender, EventArgs e) {
             if (lvRemote.SelectedItems.Count == 0)
                 return;
+            string localPath = "";
+            if (folderBrowser.ShowDialog() == DialogResult.OK)
+                localPath = folderBrowser.SelectedPath;
             if (lvRemote.SelectedItems[0].ImageIndex == (int)directionEntryTypes.file) {
                 string filename = lvRemote.SelectedItems[0].Text;
                 if (lblRemotePath.Text == "/")
-                    ftpSet.addFileToDownloadQueue(tboxServerUrl.Text + lblRemotePath.Text + filename, lblLocalPath.Text + @"\" + filename);
+                    ftpSet.addFileToDownloadQueue(tboxServerUrl.Text + lblRemotePath.Text + filename, localPath + @"\" + filename);
                 else
-                    ftpSet.addFileToDownloadQueue(tboxServerUrl.Text + lblRemotePath.Text + "/" + filename, lblLocalPath.Text + @"\" + filename);
+                    ftpSet.addFileToDownloadQueue(tboxServerUrl.Text + lblRemotePath.Text + "/" + filename, localPath + @"\" + filename);
                 ftpSet.startProcessing();
             } else if (lvRemote.SelectedItems[0].ImageIndex == (int)directionEntryTypes.directory) {
                 string filename = lvRemote.SelectedItems[0].Text;
-                ftpSet.addFolderToDownloadQueue(tboxServerUrl.Text + lblRemotePath.Text + "/" + filename, lblLocalPath.Text + @"\" + filename);
+                ftpSet.addFolderToDownloadQueue(tboxServerUrl.Text + lblRemotePath.Text + "/" + filename, localPath + @"\" + filename);
                 ftpSet.startProcessing();
             }
         }
@@ -266,6 +306,153 @@ namespace ftpClient {
                 string newName = moveFile.prop + "/" + lvRemote.SelectedItems[0].Text;
                 ftpSet.renameFile(oldName, newName);
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            folderBrowser.ShowDialog();
+            string blah = folderBrowser.SelectedPath;
+            MessageBox.Show(blah);
+
+
+        }
+
+        private void cmsLocalDelete_Click(object sender, EventArgs e)
+        {
+            if (lvLocal.SelectedItems.Count == 0)
+                return;
+            if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.file)
+            {
+                File.Delete(lblLocalPath.Text + @"\" + lvLocal.SelectedItems[0].Text);
+            }
+            else if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.directory)
+            {
+                Directory.Delete(lblLocalPath.Text + @"\" + lvLocal.SelectedItems[0].Text, true);
+            }
+
+        }
+
+        private void cmsLocalCreateFolder_Click(object sender, EventArgs e)
+        {
+            dialogBox mkLocalDir = new dialogBox();
+            mkLocalDir._formName = "Создать папку";
+            mkLocalDir._tboxName = "Новая папка";
+            mkLocalDir._btnName = "Создать";
+            mkLocalDir.ShowDialog();
+
+            if (mkLocalDir.DialogResult == DialogResult.OK)
+            {
+                if (mkLocalDir.prop == "")
+                    MessageBox.Show("Имя папки не может быть пустым!");
+                string nameOfFolder = mkLocalDir.prop;
+                if (Directory.Exists(lblLocalPath.Text + @"\" + nameOfFolder))
+                {
+                    MessageBox.Show("Папка с данным именем уже существует. Введите другое имя папки.");
+                    return;
+                }
+                else
+                    Directory.CreateDirectory(lblLocalPath.Text + @"\" + nameOfFolder);
+            }
+        }
+
+        private void cmsLocalRename_Click(object sender, EventArgs e)
+        {
+            if (lvLocal.SelectedItems.Count == 0)
+                return;
+            string oldName = lblLocalPath.Text + @"\" + lvLocal.SelectedItems[0].Text;
+
+            dialogBox renamelocal = new dialogBox();
+            renamelocal._formName = "Переименовать файл/папку";
+            renamelocal._tboxName = lvLocal.SelectedItems[0].Text;
+            renamelocal._btnName = "Переименовать";
+
+            renamelocal.ShowDialog();
+
+            if (renamelocal.DialogResult == DialogResult.OK)
+            {
+                if (renamelocal.prop == "")
+                    MessageBox.Show("Имя не может быть пустым!");
+                string nameOfFolder = renamelocal.prop;
+
+                if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.file)
+                {
+                    if (!File.Exists(lblLocalPath.Text + @"\" + nameOfFolder))
+                        File.Move(oldName, lblLocalPath.Text + @"\" + nameOfFolder);
+                    else
+                    {
+                        File.Delete(lblLocalPath.Text + @"\" + nameOfFolder);
+                        File.Move(oldName, lblLocalPath.Text + @"\" + nameOfFolder);
+                    }
+                        
+                }
+                else if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.directory)
+                {
+                    if (!Directory.Exists(lblLocalPath.Text + @"\" + nameOfFolder))
+                        Directory.Move(oldName, lblLocalPath.Text + @"\" + nameOfFolder);
+                    else
+                        MessageBox.Show("Папка с данным именем уже существует. Выберите другое.");
+                }
+                
+            }
+        }
+
+        private void cmsLocalMove_Click(object sender, EventArgs e)
+        {
+            if (lvLocal.SelectedItems.Count == 0)
+                return;
+
+            string localPath = "";
+            if (folderBrowser.ShowDialog() == DialogResult.OK)
+                localPath = folderBrowser.SelectedPath + @"\" + lvLocal.SelectedItems[0].Text;
+
+            string oldName = lblLocalPath.Text + @"\" + lvLocal.SelectedItems[0].Text;
+
+                if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.file)
+                {
+                    if (!File.Exists(localPath))
+                        File.Move(oldName, localPath);
+                    else
+                    {
+                        File.Delete(localPath);
+                        File.Move(oldName, localPath);
+                    }
+                }
+                else if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.directory)
+                {
+                    if (!Directory.Exists(localPath))
+                        Directory.Move(oldName, localPath);
+                    else
+                        MessageBox.Show("Папка с данным именем уже существует. Выберите другое.");
+                }
+
+            }
+
+        private void cmsLocalUpload_Click(object sender, EventArgs e)
+        {
+            if (lblRemotePath.Text == "Нет подключения")
+                return;
+            if (this.lvLocal.SelectedItems.Count == 0)
+                return;
+
+            if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.file)
+            {
+                string filename = lvLocal.SelectedItems[0].Text;
+                if (lblRemotePath.Text == "/")
+                    ftpSet.addFileToUploadQueue(lblLocalPath.Text + @"\" + filename, tboxServerUrl.Text + lblRemotePath.Text + filename);
+                else
+                    ftpSet.addFileToUploadQueue(lblLocalPath.Text + @"\" + filename, tboxServerUrl.Text + lblRemotePath.Text + "/" + filename);
+                ftpSet.startProcessing();
+            }
+            else if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.directory)
+            {
+                string filename = lvLocal.SelectedItems[0].Text;
+                if (lblRemotePath.Text == "/")
+                    ftpSet.addFolderToUploadQueue(lblLocalPath.Text + @"\" + filename, tboxServerUrl.Text + lblRemotePath.Text + filename);
+                else
+                    ftpSet.addFolderToUploadQueue(lblLocalPath.Text + @"\" + filename, tboxServerUrl.Text + lblRemotePath.Text + "/" + filename);
+                ftpSet.startProcessing();
+            }
+
         }
     }
 }

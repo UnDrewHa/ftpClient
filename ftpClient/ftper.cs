@@ -100,25 +100,27 @@ namespace ftpClient {
         }
 
         public void addFolderToUploadQueue(string path, string remoteDestination) {
-            //path must be a valid directory. curse thru it.
-            //List<ftpinfo> contents = ftpobject.browse(path);
-            string[] contents = Directory.GetFiles(path);
+
+            mkRemoteFolder(remoteDestination);
+
+            string[] contents = Directory.GetDirectories(path);
+            for (int i = 0; i < contents.Length; i++)
+            {
+                string filePart = StringUtils.ExtractFileFromPath(contents[i], @"\");
+                addFolderToUploadQueue(contents[i], remoteDestination + "/" + filePart);
+            }
+
+            contents = Directory.GetFiles(path);
             for (int i = 0; i < contents.Length; i++) {
                 addFileToUploadQueue(contents[i], remoteDestination);
             }
 
-            contents = Directory.GetDirectories(path);
-            for (int i = 0; i < contents.Length; i++) {
-                string filePart = StringUtils.ExtractFileFromPath(contents[i], @"\");
-                addFolderToUploadQueue(contents[i], remoteDestination + "/" + filePart);
-            }
+            
         }
 
 
         public void addFileToUploadQueue(string localFileName, string remoteDestination) {
             if (File.Exists(localFileName)) {
-                //uploadQ.Enqueue(localFileName);
-                queue.Add(remoteDestination, new fileinfo(remoteDestination, remoteDestination, directionEnum.up, true)); //ensure that the directory exists
                 queue.Add(localFileName, new fileinfo(localFileName, remoteDestination, directionEnum.up));
             } else {
                 throw new Exception("Incorrect file path: " + localFileName);
