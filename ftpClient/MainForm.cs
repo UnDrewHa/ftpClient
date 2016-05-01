@@ -9,9 +9,19 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Net;
+using System.Runtime.InteropServices;
 
 namespace ftpClient {
     public partial class MainForm : Form {
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+
+        [DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd,
+                         int Msg, int wParam, int lParam);
+        [DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+
         ftper ftpSet = new ftper();
         public MainForm() {
             InitializeComponent();
@@ -35,67 +45,72 @@ namespace ftpClient {
         void fsOnChanged(object source, FileSystemEventArgs e)
         {
             // Specify what is done when a file is changed, created, or deleted.
-            Console.WriteLine("File: " + e.FullPath + " " + e.ChangeType);
+            //statusBar.Text = "File: " + e.FullPath + " " + e.ChangeType;
             
             
         }
         void fsOnCreated(object source, FileSystemEventArgs e)
         {
             // Specify what is done when a file is changed, created, or deleted.
-            Console.WriteLine("File: " + e.FullPath + " " + e.ChangeType);
+            //statusBar.Text = "File: " + e.FullPath + " " + e.ChangeType;
             
         }
         void fsOnDeleted(object source, FileSystemEventArgs e)
         {
             // Specify what is done when a file is changed, created, or deleted.
-            Console.WriteLine("File: " + e.FullPath + " " + e.ChangeType);
+            //statusBar.Text = "File: " + e.FullPath + " " + e.ChangeType;
             
         }
         void fsOnRenamed(object source, FileSystemEventArgs e)
         {
             // Specify what is done when a file is changed, created, or deleted.
-            Console.WriteLine("File: " + e.FullPath + " " + e.ChangeType);
+            //statusBar.Text = "File: " + e.FullPath + " " + e.ChangeType;
             
         }
 
         void ftpobject_downloadProgress(object sender, downloadProgressEventArgs e)
         {
-            /*
-            int step = (e.bytesTransferred / e.totalBytes)/100;
-            progressBar.Step = e.bytesTransferred;
-            progressBar.Maximum = e.totalBytes;
-            */
-            
+            progressBar.Style = ProgressBarStyle.Marquee;
+
         }
         void ftpobject_mkDirRemoteComplete(object sender, mkDirRemoteCompleteEventArgs e) {
-            statusStrip.Text += "Create complete: " + e.filename + Environment.NewLine;
-            statusStrip.Text += "Refreshing the remote folder..." + e.filename + Environment.NewLine;
+            statusBar.Text = "Папка создана: " + e.filename + Environment.NewLine + statusBar.Text;
             refreshRemote();
         }
 
         void ftpobject_uploadComplete(object sender, uploadCompleteEventArgs e) {
-            statusStrip.Text += "Upload complete: " + e.filename + Environment.NewLine;
-            statusStrip.Text += "Refreshing the remote folder..." + e.filename + Environment.NewLine;
+            progressBar.Style = ProgressBarStyle.Blocks;
+            statusBar.Text = "Загрузка завершена: " + e.filename + Environment.NewLine + statusBar.Text + statusBar.Text;
             refreshRemote();
         }
         
         void ftpobject_deleteComplete(object sender, deleteCompleteEventArgs e) {
-            statusStrip.Text += "Delete complete: " + e.filename + Environment.NewLine;
-            statusStrip.Text += "Refreshing the remote folder..." + e.filename + Environment.NewLine;
+            statusBar.Text = e.filename + Environment.NewLine + statusBar.Text;
             refreshRemote();
         }
 
         void ftpobject_downloadComplete(object sender, downloadCompleteEventArgs e) {
-            statusStrip.Text += "Download complete: " + e.filename + Environment.NewLine;
-            statusStrip.Text += "Refreshing the local folder..." + e.filename + Environment.NewLine;
+            progressBar.Style = ProgressBarStyle.Blocks;
+            statusBar.Text = "Скачка завершена: " + e.filename + Environment.NewLine + statusBar.Text;
             refreshLocal();
+            
         }
 
         void ftpobject_statusChange(object sender, statusChangeEventArgs e) {
-            statusStrip.Text += "STATUS: " + e.message + " db:" + e.bytesDownloaded + " up:" + e.bytesUploaded + System.Environment.NewLine;
+            statusBar.Text = e.message + System.Environment.NewLine + statusBar.Text;
         }
 
         private void MainForm_Load(object sender, EventArgs e) {
+            mainTab.Visible = true;
+            works.Visible = false;
+            about.Visible = false;
+            header.BackColor = Color.FromArgb(59,70,74);
+            panel1.BackColor = Color.FromArgb(63, 74, 78);
+            panel2.BackColor = Color.FromArgb(59, 70, 74);
+            panel3.BackColor = Color.FromArgb(59, 70, 74);
+            label4.BackColor = Color.FromArgb(63, 74, 78);
+            label5.BackColor = Color.FromArgb(59, 70, 74);
+            label6.BackColor = Color.FromArgb(59, 70, 74);
             if (!System.IO.Directory.Exists(@"C:\ftptest")) {
                 System.IO.Directory.CreateDirectory(@"C:\ftptest");
             }
@@ -111,10 +126,16 @@ namespace ftpClient {
             DirectoryInfo di = new DirectoryInfo(lblLocalPath.Text);
 
             foreach (DirectoryInfo dri in di.GetDirectories()) {
-                lvLocal.Items.Add(dri.Name, (int)directionEntryTypes.directory);
+                string date = di.CreationTime.ToString();
+                string size = "";
+                string[] sub = new string[] { size, date };
+                lvLocal.Items.Add(dri.Name, (int)directionEntryTypes.directory).SubItems.AddRange(sub);
             }
             foreach (FileInfo fi in di.GetFiles()) {
-                lvLocal.Items.Add(fi.Name, (int)directionEntryTypes.file);
+                string size = GetFileSize(fi.Length);
+                string date = fi.LastWriteTime.ToString();
+                string[] sub = new string[] { size, date };
+                lvLocal.Items.Add(fi.Name, (int)directionEntryTypes.file).SubItems.AddRange(sub);
             }
             }
 
@@ -161,10 +182,29 @@ namespace ftpClient {
             //lvwRemote.Items.Add("..");
             if (files == null)
                 return;
+            string blah = "";
             foreach (ftpinfo file in files) {
                 ListViewItem it = new ListViewItem(file.filename, file.fileType == directionEntryTypes.directory ? (int)directionEntryTypes.directory : (int)directionEntryTypes.file);
-                lvRemote.Items.Add(it);
+                string size = GetFileSize(file.size).ToString();
+                string date = file.fileDateTime.ToString();
+                string[] sub = { size, date };
+                lvRemote.Items.Add(it).SubItems.AddRange(sub);
             }
+        }
+        public static string GetFileSize(long numBytes)
+        {
+            string fileSize = "";
+
+            if (numBytes > 1073741824)
+                fileSize = String.Format("{0:0.00} Gb", (double)numBytes / 1073741824);
+            else if (numBytes > 1048576)
+                fileSize = String.Format("{0:0.00} Mb", (double)numBytes / 1048576);
+            else
+                fileSize = String.Format("{0:0} Kb", (double)numBytes / 1024);
+
+            if (fileSize == "0 Kb")
+                fileSize = "";						
+            return fileSize;
         }
 
         private void btnUpRemote_Click(object sender, EventArgs e) {
@@ -321,14 +361,22 @@ namespace ftpClient {
         {
             if (lvLocal.SelectedItems.Count == 0)
                 return;
-            if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.file)
+            try
             {
-                File.Delete(lblLocalPath.Text + @"\" + lvLocal.SelectedItems[0].Text);
+                if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.file)
+                {
+                    File.Delete(lblLocalPath.Text + @"\" + lvLocal.SelectedItems[0].Text);
+                }
+                else if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.directory)
+                {
+                    Directory.Delete(lblLocalPath.Text + @"\" + lvLocal.SelectedItems[0].Text, true);
+                }
             }
-            else if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.directory)
+            catch (Exception ex)
             {
-                Directory.Delete(lblLocalPath.Text + @"\" + lvLocal.SelectedItems[0].Text, true);
+                MessageBox.Show(ex.Message, "Ошибка удаления");
             }
+
 
         }
 
@@ -351,7 +399,14 @@ namespace ftpClient {
                     return;
                 }
                 else
-                    Directory.CreateDirectory(lblLocalPath.Text + @"\" + nameOfFolder);
+                    try
+                    {
+                        Directory.CreateDirectory(lblLocalPath.Text + @"\" + nameOfFolder);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Ошибка при создании папки");
+                    }
             }
         }
 
@@ -388,7 +443,14 @@ namespace ftpClient {
                 else if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.directory)
                 {
                     if (!Directory.Exists(lblLocalPath.Text + @"\" + nameOfFolder))
-                        Directory.Move(oldName, lblLocalPath.Text + @"\" + nameOfFolder);
+                        try
+                        {
+                            Directory.Move(oldName, lblLocalPath.Text + @"\" + nameOfFolder);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message, "Ошибка переименовывания");
+                        }
                     else
                         MessageBox.Show("Папка с данным именем уже существует. Выберите другое.");
                 }
@@ -403,56 +465,268 @@ namespace ftpClient {
 
             string localPath = "";
             if (folderBrowser.ShowDialog() == DialogResult.OK)
+            {
                 localPath = folderBrowser.SelectedPath + @"\" + lvLocal.SelectedItems[0].Text;
 
-            string oldName = lblLocalPath.Text + @"\" + lvLocal.SelectedItems[0].Text;
+                string oldName = lblLocalPath.Text + @"\" + lvLocal.SelectedItems[0].Text;
 
                 if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.file)
                 {
-                    if (!File.Exists(localPath))
-                        File.Move(oldName, localPath);
-                    else
+                    try
                     {
-                        File.Delete(localPath);
-                        File.Move(oldName, localPath);
+                        if (!File.Exists(localPath))
+                            File.Move(oldName, localPath);
+                        else
+                        {
+                            File.Delete(localPath);
+                            File.Move(oldName, localPath);
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Ошибка перемещения");
+                    }
+                    
                 }
                 else if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.directory)
                 {
-                    if (!Directory.Exists(localPath))
-                        Directory.Move(oldName, localPath);
-                    else
-                        MessageBox.Show("Папка с данным именем уже существует. Выберите другое.");
+                    try
+                    {
+                        if (!Directory.Exists(localPath))
+                            Directory.Move(oldName, localPath);
+                        else
+                            MessageBox.Show("Папка с данным именем уже существует. Выберите другое.");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Ошибка перемещения");
+                    }
                 }
-
+            }
             }
 
         private void cmsLocalUpload_Click(object sender, EventArgs e)
         {
             if (lblRemotePath.Text == "Нет подключения")
+            {
+                MessageBox.Show("Необходимо подключиться к ftp-серверу.");
                 return;
+            }
+                
             if (this.lvLocal.SelectedItems.Count == 0)
                 return;
+            folderExplorer upload = new folderExplorer();
+            upload._formName = "Зугрузить файл на сервер";
+            upload._btnName = "Загрузить";
+            upload._lblText = "Выберите папку:";
+            upload._server = tboxServerUrl.Text;
+            upload._path = lblRemotePath.Text;
+            upload._username = tboxUserName.Text;
+            upload._password = tboxUserPass.Text;
+            upload._selectedFile = lvLocal.SelectedItems[0].Text;
+            upload._selectedFilePath = tboxServerUrl.Text + lblRemotePath;
+            upload.ShowDialog();
 
-            if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.file)
+            string path = "";
+            if (upload.DialogResult == DialogResult.OK)
             {
-                string filename = lvLocal.SelectedItems[0].Text;
-                if (lblRemotePath.Text == "/")
-                    ftpSet.addFileToUploadQueue(lblLocalPath.Text + @"\" + filename, tboxServerUrl.Text + lblRemotePath.Text + filename);
-                else
-                    ftpSet.addFileToUploadQueue(lblLocalPath.Text + @"\" + filename, tboxServerUrl.Text + lblRemotePath.Text + "/" + filename);
-                ftpSet.startProcessing();
-            }
-            else if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.directory)
-            {
-                string filename = lvLocal.SelectedItems[0].Text;
-                if (lblRemotePath.Text == "/")
-                    ftpSet.addFolderToUploadQueue(lblLocalPath.Text + @"\" + filename, tboxServerUrl.Text + lblRemotePath.Text + filename);
-                else
-                    ftpSet.addFolderToUploadQueue(lblLocalPath.Text + @"\" + filename, tboxServerUrl.Text + lblRemotePath.Text + "/" + filename);
-                ftpSet.startProcessing();
+                if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.file)
+                {
+                    string filename = lvLocal.SelectedItems[0].Text;
+                    if (lblRemotePath.Text == "/")
+                    {
+                        path = tboxServerUrl.Text + upload.prop;
+                        ftpSet.addFileToUploadQueue(lblLocalPath.Text + @"\" + filename, path);
+                    }
+                        
+                    else
+                    {
+                        path = tboxServerUrl.Text + upload.prop;
+                        ftpSet.addFileToUploadQueue(lblLocalPath.Text + @"\" + filename, tboxServerUrl.Text + lblRemotePath.Text + "/" + filename);
+                    }
+                        
+                    ftpSet.startProcessing();
+                }
+                else if (lvLocal.SelectedItems[0].ImageIndex == (int)directionEntryTypes.directory)
+                {
+                    string filename = lvLocal.SelectedItems[0].Text;
+                    if (lblRemotePath.Text == "/")
+                    {
+                        path = tboxServerUrl.Text + upload.prop;
+                        ftpSet.addFolderToUploadQueue(lblLocalPath.Text + @"\" + filename, tboxServerUrl.Text + lblRemotePath.Text + filename);
+                    }
+                    else
+                    {
+                        path = tboxServerUrl.Text + upload.prop;
+                        ftpSet.addFolderToUploadQueue(lblLocalPath.Text + @"\" + filename, tboxServerUrl.Text + lblRemotePath.Text + "/" + filename);
+                    }
+                        
+                    ftpSet.startProcessing();
+                }
             }
 
+            
+
+
+
+        }
+
+        private void MainForm_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
+        }
+
+        private void panel1_MouseHover(object sender, EventArgs e)
+        {
+            panel1.BackColor = Color.FromArgb(63, 74, 78);
+            label4.BackColor = Color.FromArgb(63, 74, 78);
+        }
+
+        private void panel1_MouseLeave(object sender, EventArgs e)
+        {
+            panel1.BackColor = Color.FromArgb(59, 70, 74);
+            label4.BackColor = Color.FromArgb(59, 70, 74);
+        }
+
+        private void panel2_MouseHover(object sender, EventArgs e)
+        {
+            panel2.BackColor = Color.FromArgb(63, 74, 78);
+            label5.BackColor = Color.FromArgb(63, 74, 78);
+        }
+
+        private void panel2_MouseLeave(object sender, EventArgs e)
+        {
+            panel2.BackColor = Color.FromArgb(59, 70, 74);
+            label5.BackColor = Color.FromArgb(59, 70, 74);
+        }
+
+        private void panel3_MouseHover(object sender, EventArgs e)
+        {
+            panel3.BackColor = Color.FromArgb(63, 74, 78);
+            label6.BackColor = Color.FromArgb(63, 74, 78);
+        }
+
+        private void panel3_MouseLeave(object sender, EventArgs e)
+        {
+            panel3.BackColor = Color.FromArgb(59, 70, 74);
+            label6.BackColor = Color.FromArgb(59, 70, 74);
+        }
+
+        private void panel4_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void panel5_Click(object sender, EventArgs e)
+        {
+                this.Hide();
+        }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+
+        }
+
+        private void MainForm_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
+        }
+
+        private void notifyIcon1_Click(object sender, EventArgs e)
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+        }
+
+        private void lblServerUrl_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel2_Click(object sender, EventArgs e)
+        {
+            mainTab.Visible = false;
+            works.Visible = true;
+            about.Visible = false;
+
+            panel1.BackColor = Color.FromArgb(59, 70, 74);
+            panel2.BackColor = Color.FromArgb(63, 74, 78);
+            panel3.BackColor = Color.FromArgb(59, 70, 74);
+            label4.BackColor = Color.FromArgb(59, 70, 74);
+            label4.ForeColor = Color.DarkGray;
+            label5.BackColor = Color.FromArgb(63, 74, 78);
+            label5.ForeColor = Color.FromArgb(255,255,255);
+            label6.BackColor = Color.FromArgb(59, 70, 74);
+            label6.ForeColor = Color.DarkGray;
+        }
+
+        private void panel3_Click(object sender, EventArgs e)
+        {
+            mainTab.Visible = false;
+            works.Visible = false;
+            about.Visible = true;
+
+            panel1.BackColor = Color.FromArgb(59, 70, 74);
+            panel2.BackColor = Color.FromArgb(59, 70, 74);
+            panel3.BackColor = Color.FromArgb(63, 74, 78);
+            label4.BackColor = Color.FromArgb(59, 70, 74);
+            label4.ForeColor = Color.DarkGray;
+            label5.BackColor = Color.FromArgb(59, 70, 74);
+            label5.ForeColor = Color.DarkGray;
+            label6.BackColor = Color.FromArgb(63, 74, 78);
+            label6.ForeColor = Color.FromArgb(255, 255, 255);
+        }
+
+        private void panel1_Click(object sender, EventArgs e)
+        {
+            mainTab.Visible = true;
+            works.Visible = false;
+            about.Visible = false;
+
+            panel1.BackColor = Color.FromArgb(63, 74, 78);
+            panel2.BackColor = Color.FromArgb(59, 70, 74);
+            panel3.BackColor = Color.FromArgb(59, 70, 74);
+            label4.BackColor = Color.FromArgb(63, 74, 78);
+            label4.ForeColor = Color.FromArgb(255, 255, 255);
+            label5.BackColor = Color.FromArgb(59, 70, 74);
+            label5.ForeColor = Color.DarkGray;
+            label6.BackColor = Color.FromArgb(59, 70, 74);
+            label6.ForeColor = Color.DarkGray;
+        }
+
+        private void mainTab_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
+        }
+
+        private void about_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
+        }
+
+        private void works_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
         }
     }
 }

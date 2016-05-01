@@ -86,6 +86,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -99,6 +100,111 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\Attention.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\bg.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\Cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\close.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\Contacts.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\Delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\Download from the Cloud.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\Edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\File.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\Folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\Globe.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\Info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\Key.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\logo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\min.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\Move by Trolley.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\Plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\Synchronize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="pics\Upload to the Cloud.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\close.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\minim.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\minim1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Download from the Cloud.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\External Link.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Upload to the Cloud.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Computer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Globe Asia.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Domain.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Key 2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\User.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cancel.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

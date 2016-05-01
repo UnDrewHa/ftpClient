@@ -28,52 +28,40 @@ namespace ftpClient {
 
         #region События
         void OnDownloadComplete(string filename) {
-            //save delegate field in a temporary field for thread-safety
             EventHandler<downloadCompleteEventArgs> temp = downloadComplete;
 
             if (temp != null) {
-                //if there is a listener who as asked for notification, then give away!
                 downloadCompleteEventArgs e = new downloadCompleteEventArgs();
                 e.filename = filename;
-                //temp(this, e);
                 context.Post(delegate (object state) { downloadComplete(this, e); }, null);
             }
         }
 
         void onmkDirRemoteComplete(string filename) {
-            //save delegate field in a temporary field for thread-safety
             EventHandler<mkDirRemoteCompleteEventArgs> temp = mkDirRemoteComplete;
 
             if (temp != null) {
-                //if there is a listener who as asked for notification, then give away!
                 mkDirRemoteCompleteEventArgs e = new mkDirRemoteCompleteEventArgs();
                 e.filename = filename;
-                //temp(this, e);
                 context.Post(delegate (object state) { mkDirRemoteComplete(this, e); }, null);
             }
         }
 
         void OnDeleteComplete(string filename) {
             EventHandler<deleteCompleteEventArgs> temp = deleteComplete;
-
             if (temp != null) {
-                //if there is a listener who as asked for notification, then give away!
                 deleteCompleteEventArgs e = new deleteCompleteEventArgs();
                 e.filename = filename;
-                //uploadComplete(this, e);
                 context.Post(delegate (object state) { deleteComplete(this, e); }, null);
             }
         }
 
         void OnUploadComplete(string filename) {
-            //save delegate field in a temporary field for thread-safety
             EventHandler<uploadCompleteEventArgs> temp = uploadComplete;
 
             if (temp != null) {
-                //if there is a listener who as asked for notification, then give away!
                 uploadCompleteEventArgs e = new uploadCompleteEventArgs();
                 e.filename = filename;
-                //uploadComplete(this, e);
                 context.Post(delegate (object state) { uploadComplete(this, e); }, null);
             }
         }
@@ -85,8 +73,6 @@ namespace ftpClient {
                 e.filename = filename;
                 e.bytesTransferred = bytesTransferred;
                 e.totalBytes = totalBytes;
-                //downloadProgress(this, e);
-                //temp(this, e);
                 context.Post(delegate (object state) { downloadProgress(this, e); }, null);
             }
         }
@@ -97,22 +83,18 @@ namespace ftpClient {
                 uploadProgressEventArgs e = new uploadProgressEventArgs();
                 e.filename = filename;
                 e.bytesTransferred = bytesTransferred;
-                //uploadProgress(this, e);
                 context.Post(delegate (object state) { uploadProgress(this, e); }, null);
             }
         }
 
         internal void OnStatusChange(string message, long uploaded, long downloaded) {
-            //save delegate field in a temporary field for thread-safety
             EventHandler<statusChangeEventArgs> temp = statusChange;
 
             if (temp != null) {
-                //if there is a listener who as asked for notification, then give away!
                 statusChangeEventArgs e = new statusChangeEventArgs();
                 e.message = message;
                 e.bytesUploaded = uploaded;
                 e.bytesDownloaded = downloaded;
-                //statusChange(this, e);
                 context.Post(delegate (object state) { statusChange(this, e); }, null);
             }
         }
@@ -120,28 +102,35 @@ namespace ftpClient {
 
         internal ftp() {
             context = SynchronizationContext.Current;
-        } //hide constructor from the outside world.
-
-        //tests connection and browse to home-directory
+        } 
         public List<ftpinfo> connect(string host, string username, string password) {
             this._username = username;
             this._password = password;
 
-            //FtpWebRequest.Create(host); //test connect;
             context = SynchronizationContext.Current;
 
             return browse(host);
         }
 
         public string deleteFile(string path) {
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(path);
-            request.Method = WebRequestMethods.Ftp.DeleteFile;
-            request.Credentials = new NetworkCredential(_username, _password);
+            try
+            {
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(path);
+                request.Method = WebRequestMethods.Ftp.DeleteFile;
+                request.Credentials = new NetworkCredential(_username, _password);
 
-            using (FtpWebResponse response = (FtpWebResponse)request.GetResponse()) {
-                OnDeleteComplete(response.StatusDescription);
-                return response.StatusDescription;
+                using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+                {
+                    OnDeleteComplete(response.StatusDescription);
+                    return response.StatusDescription;
+                }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка удаления");
+            }
+            return "";
+            
         }
 
         public string renameFile(string path, string newName)
@@ -186,7 +175,7 @@ namespace ftpClient {
 
                 using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
                 {
-                    onmkDirRemoteComplete(response.StatusDescription);
+                    onmkDirRemoteComplete(response.ResponseUri.ToString());
                     return response.StatusDescription;
                 }
             }
@@ -199,76 +188,86 @@ namespace ftpClient {
         }
 
 
-        public List<ftpinfo> browse(string path) //eg: "ftp.xyz.org", "ftp.xyz.org/ftproot/etc"
+        public List<ftpinfo> browse(string path)
         {
+            
+                FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(path);
+                request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
+                List<ftpinfo> files = new List<ftpinfo>();
+                try
+                {
+                request.Credentials = new NetworkCredential(_username, _password);
+                Stream rs = (Stream)request.GetResponse().GetResponseStream();
 
-            FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(path);
-            request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
-            List<ftpinfo> files = new List<ftpinfo>();
+                OnStatusChange("CONNECTED: " + path, 0, 0);
 
-            //request.Proxy = System.Net.WebProxy.GetDefaultProxy();
-            //request.Proxy.Credentials = CredentialCache.DefaultNetworkCredentials;
-            request.Credentials = new NetworkCredential(_username, _password);
-            Stream rs = (Stream)request.GetResponse().GetResponseStream();
+                StreamReader sr = new StreamReader(rs);
+                string strList = sr.ReadToEnd();
+                string[] lines = null;
 
-            OnStatusChange("CONNECTED: " + path, 0, 0);
+                if (strList.Contains("\r\n"))
+                {
+                    lines = strList.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                }
+                else if (strList.Contains("\n"))
+                {
+                    lines = strList.Split(new string[] { "\n" }, StringSplitOptions.None);
+                }
 
-            StreamReader sr = new StreamReader(rs);
-            string strList = sr.ReadToEnd();
-            string[] lines = null;
+                if (lines == null || lines.Length == 0)
+                    return null;
 
-            if (strList.Contains("\r\n")) {
-                lines = strList.Split(new string[] { "\r\n" }, StringSplitOptions.None);
-            } else if (strList.Contains("\n")) {
-                lines = strList.Split(new string[] { "\n" }, StringSplitOptions.None);
+                foreach (string line in lines)
+                {
+                    if (line.Length == 0)
+                        continue;
+                    Match m = GetMatchingRegex(line);
+                    if (m == null)
+                    {
+                        throw new ApplicationException("Unable to parse line: " + line);
+                    }
+
+                    ftpinfo item = new ftpinfo();
+                    item.filename = m.Groups["name"].Value.Trim('\r');
+                    item.path = path;
+                    item.size = Convert.ToInt64(m.Groups["size"].Value);
+                    item.permission = m.Groups["permission"].Value;
+                    string _dir = m.Groups["dir"].Value;
+                    if (_dir.Length > 0 && _dir != "-")
+                    {
+                        item.fileType = directionEntryTypes.directory;
+                    }
+                    else {
+                        item.fileType = directionEntryTypes.file;
+                    }
+
+                    try
+                    {
+                        item.fileDateTime = DateTime.Parse(m.Groups["timestamp"].Value);
+                    }
+                    catch
+                    {
+                        item.fileDateTime = DateTime.MinValue;
+                    }
+
+                    files.Add(item);
+                }
+
+                
             }
-
-            //now decode this string array
-
-            if (lines == null || lines.Length == 0)
-                return null;
-
-            foreach (string line in lines) {
-                if (line.Length == 0)
-                    continue;
-                //parse line
-                Match m = GetMatchingRegex(line);
-                if (m == null) {
-                    //failed
-                    throw new ApplicationException("Unable to parse line: " + line);
-                }
-
-                ftpinfo item = new ftpinfo();
-                item.filename = m.Groups["name"].Value.Trim('\r');
-                item.path = path;
-                item.size = Convert.ToInt64(m.Groups["size"].Value);
-                item.permission = m.Groups["permission"].Value;
-                string _dir = m.Groups["dir"].Value;
-                if (_dir.Length > 0 && _dir != "-") {
-                    item.fileType = directionEntryTypes.directory;
-                } else {
-                    item.fileType = directionEntryTypes.file;
-                }
-
-                try {
-                    item.fileDateTime = DateTime.Parse(m.Groups["timestamp"].Value);
-                }
-                catch {
-                    item.fileDateTime = DateTime.MinValue; //null;
-                }
-
-                files.Add(item);
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка доступа");
             }
 
             return files;
         }
 
+
         public string createRemoteDirectory(fileinfo file) {
             try
             {
-                //System.IO.FileInfo info = new FileInfo(file.completeFileName);
-                //This is actually a directory:
-                string filename = file.completeFileName;//.Substring(file.completeFileName.LastIndexOf(@"\") + 1);
+                string filename = file.completeFileName;
                 FtpWebRequest request = (FtpWebRequest)FtpWebRequest.Create(file.destination);
                 request.Credentials = new NetworkCredential(_username, _password);
                 request.Method = WebRequestMethods.Ftp.MakeDirectory;
@@ -294,13 +293,13 @@ namespace ftpClient {
             request.UseBinary = true;
             request.UsePassive = true;
             request.KeepAlive = true;
-            request.Timeout = 600000;
+            //request.Timeout = 600000;
             request.Credentials = new NetworkCredential(_username, _password);
             FtpWebResponse response = (FtpWebResponse)request.GetResponse();
             Stream rs = response.GetResponseStream();
-            rs.ReadTimeout = 600000;
-            rs.WriteTimeout = 600000;
-            FileStream fs = info.Create();
+            //rs.ReadTimeout = 600000;
+            //rs.WriteTimeout = 600000;
+            FileStream fs = info.OpenWrite();
             int fileSize = Convert.ToInt32(response.ContentLength);
             try
             {
@@ -315,10 +314,7 @@ namespace ftpClient {
                     fs.Write(buffer, 0, readCount);
                     readCount = rs.Read(buffer, 0, bufferSize);
                     OnDownloadProgress(file.completeFileName, 66, fileSize);
-                    Console.WriteLine(file.completeFileName + " Скачано: " + buffer);
                 }
-
-
                 OnDownloadComplete(file.completeFileName);
             }
             catch (Exception ex)
@@ -379,7 +375,7 @@ namespace ftpClient {
                         @"(?<timestamp>\d{2}\-\d{2}\-\d{2}\s+\d{2}:\d{2}[Aa|Pp][mM])\s+(?<dir>\<\w+\>){0,1}(?<size>\d+){0,1}\s+(?<name>.+)"};
             Regex rx;
             Match m;
-            for (int i = 0; i < formats.Length; i++)  //As Integer = 0 To formats.Length - 1
+            for (int i = 0; i < formats.Length; i++)
             {
                 rx = new Regex(formats[i]);
                 m = rx.Match(line);

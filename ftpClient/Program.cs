@@ -6,9 +6,6 @@ using System.Windows.Forms;
 
 namespace ftpClient {
     static class Program {
-        /// <summary>
-        /// Главная точка входа для приложения.
-        /// </summary>
         [STAThread]
         static void Main() {
             Application.EnableVisualStyles();

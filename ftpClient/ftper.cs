@@ -19,7 +19,7 @@ namespace ftpClient {
         }
 
         public bool isProcessing() {
-            return _threadRunning; //check if a thread is running for up/download
+            return _threadRunning; 
         }
 
         public List<ftpinfo> connect(string host, string username, string password, bool all = true) {
@@ -31,9 +31,9 @@ namespace ftpClient {
                 _threadRunning = false;
             }
 
-            int timeout = 60; //seconds
+            int timeout = 60; 
             DateTime start = DateTime.Now;
-            while (queue.Count == 0) //wait till running up/download threads complete.
+            while (queue.Count == 0) 
             {
                 if (DateTime.Now.Subtract(start).Seconds > timeout)
                     break;
@@ -172,28 +172,24 @@ namespace ftpClient {
             }
         }
 
-        //start the processing thread
         public void startProcessing() {
             _threadRunning = true;
             Console.WriteLine("Started download/upload");
             ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadForProcessQueue));
         }
 
-        //stop the processing thread
         public void stopProcessing() {
             _threadRunning = false;
         }
 
         private void ThreadForProcessQueue(object stateInfo) {
-            // No state object was passed to QueueUserWorkItem, so 
-            // stateInfo is null.
 
             try {
                 while (_threadRunning && queue.Count > 0) {
-                    //process next queue item
+
                     object[] keys = new object[queue.Keys.Count];
                     queue.Keys.CopyTo(keys, 0);
-                    fileinfo nextitem = (fileinfo)queue[keys[0]]; //process first item in the queue
+                    fileinfo nextitem = (fileinfo)queue[keys[0]]; 
                     if (nextitem.mkdirFlag) {
                         ftpObject.createRemoteDirectory(nextitem);
                     } else {
@@ -203,7 +199,7 @@ namespace ftpClient {
                             ftpObject.upload(nextitem);
                         }
                     }
-                    //remove item from queue after processing it
+
                     queue.Remove(nextitem.completeFileName);
                 }
             }
@@ -220,11 +216,10 @@ namespace ftpClient {
 
     public class fileinfo {
         public directionEnum direction = directionEnum.down;
-        public string completeFileName = "";    //local or remote file name
+        public string completeFileName = "";
         public string destination = "";
-        public bool mkdirFlag = false; //boolean value to indicate if the specified folder is to be created locally/remotely
-                                       //public ftpinfo ftpstats=null;	//applicable only for remote files
-                                       //public FileInfo filestats=null;	//applicable only for local files
+        public bool mkdirFlag = false;
+        public long size;
 
         //to upload
         public fileinfo(string fileName, string destination, directionEnum direction, bool mkdirFlag) {
