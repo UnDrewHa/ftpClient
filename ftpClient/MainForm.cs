@@ -215,7 +215,7 @@ namespace ftpClient {
             if (lvRemote.SelectedItems.Count == 0)
                 return;
             string filename = lvRemote.SelectedItems[0].Text;
-            string oldName = "", newName = "";
+            string oldName = "";
             if (lblRemotePath.Text == "/")
                 oldName = tboxServerUrl.Text + lblRemotePath.Text + filename;
             else
@@ -235,6 +235,36 @@ namespace ftpClient {
                 string nameOfFolder = renameSome.prop;
 
                 ftpSet.renameFile(oldName, nameOfFolder);
+            }
+        }
+
+        private void cmsRemoteMove_Click(object sender, EventArgs e)
+        {
+            if (lvRemote.SelectedItems.Count == 0)
+                return;
+            string filename = lvRemote.SelectedItems[0].Text;
+            string oldName = "";
+            if (lblRemotePath.Text == "/")
+                oldName = tboxServerUrl.Text + lblRemotePath.Text + filename;
+            else
+                oldName = tboxServerUrl.Text + lblRemotePath.Text + "/" + filename;
+
+            folderExplorer moveFile = new folderExplorer();
+            moveFile._formName = "Переместить файл";
+            moveFile._btnName = "Переместить";
+            moveFile._lblText = "Выберите папку:";
+            moveFile._server = tboxServerUrl.Text;
+            moveFile._path = lblRemotePath.Text;
+            moveFile._username = tboxUserName.Text;
+            moveFile._password = tboxUserPass.Text;
+            moveFile._selectedFile = lvRemote.SelectedItems[0].Text;
+            moveFile._selectedFilePath = tboxServerUrl.Text + lblRemotePath;
+            moveFile.ShowDialog();
+
+            if (moveFile.DialogResult == DialogResult.OK)
+            {
+                string newName = moveFile.prop + "/" + lvRemote.SelectedItems[0].Text;
+                ftpSet.renameFile(oldName, newName);
             }
         }
     }

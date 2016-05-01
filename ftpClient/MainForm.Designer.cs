@@ -258,7 +258,7 @@
             this.cmsRemoteDelete,
             this.cmsRemoteCreateFolder});
             this.cmsRemote.Name = "cmsRemote";
-            this.cmsRemote.Size = new System.Drawing.Size(162, 136);
+            this.cmsRemote.Size = new System.Drawing.Size(162, 114);
             // 
             // cmsRemoteDownload
             // 
@@ -279,6 +279,7 @@
             this.cmsRemoteMove.Name = "cmsRemoteMove";
             this.cmsRemoteMove.Size = new System.Drawing.Size(161, 22);
             this.cmsRemoteMove.Text = "Переместить";
+            this.cmsRemoteMove.Click += new System.EventHandler(this.cmsRemoteMove_Click);
             // 
             // cmsRemoteDelete
             // 

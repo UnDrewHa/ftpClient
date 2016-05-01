@@ -22,7 +22,7 @@ namespace ftpClient {
             return _threadRunning; //check if a thread is running for up/download
         }
 
-        public List<ftpinfo> connect(string host, string username, string password) {
+        public List<ftpinfo> connect(string host, string username, string password, bool all = true) {
             return ftpObject.connect(host, username, password);
         }
 
@@ -94,7 +94,7 @@ namespace ftpClient {
                 string ss = "//";
                 int ind = fp.LastIndexOf(ss);
                 if (ind > 5)
-                fp = fp.Remove(ind, 1);
+                    fp = fp.Remove(ind, 1);
                 ftpObject.deleteFolder(fp);
 
         }

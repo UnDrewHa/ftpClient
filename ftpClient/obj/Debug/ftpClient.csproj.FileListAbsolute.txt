@@ -18,3 +18,4 @@ C:\Users\Эндрю\Desktop\ftpClient\ftpClient\obj\Debug\ftpClient.MainForm.res
 C:\Users\Эндрю\Desktop\ftpClient\ftpClient\obj\Debug\ftpClient.Properties.Resources.resources
 C:\Users\Эндрю\Desktop\ftpClient\ftpClient\obj\Debug\ftpClient.csproj.GenerateResource.Cache
 C:\Users\Эндрю\Desktop\ftpClient\ftpClient\obj\Debug\ftpClient.dialogBox.resources
+C:\Users\Эндрю\Desktop\ftpClient\ftpClient\obj\Debug\ftpClient.folderExplorer.resources
