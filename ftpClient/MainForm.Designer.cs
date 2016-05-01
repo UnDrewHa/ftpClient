@@ -24,12 +24,6 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            this.mainMenu = new System.Windows.Forms.MenuStrip();
-            this.главнаяToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.выходToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.помощьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.оПроектеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.какРаботатьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblServerUrl = new System.Windows.Forms.Label();
             this.lblUserName = new System.Windows.Forms.Label();
             this.lblUserPass = new System.Windows.Forms.Label();
@@ -59,60 +53,19 @@
             this.lblRemotePath = new System.Windows.Forms.Label();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.folderBrowser = new System.Windows.Forms.FolderBrowserDialog();
-            this.mainMenu.SuspendLayout();
+            this.главнаяToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.выходToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.помощьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.оПроектеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.какРаботатьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mainMenu = new System.Windows.Forms.MenuStrip();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.cmsLocal.SuspendLayout();
             this.cmsRemote.SuspendLayout();
             this.statusStrip.SuspendLayout();
+            this.mainMenu.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // mainMenu
-            // 
-            this.mainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.главнаяToolStripMenuItem,
-            this.помощьToolStripMenuItem});
-            this.mainMenu.Location = new System.Drawing.Point(0, 0);
-            this.mainMenu.Name = "mainMenu";
-            this.mainMenu.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
-            this.mainMenu.Size = new System.Drawing.Size(1054, 24);
-            this.mainMenu.TabIndex = 0;
-            this.mainMenu.Text = "Главное меню";
-            // 
-            // главнаяToolStripMenuItem
-            // 
-            this.главнаяToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.выходToolStripMenuItem});
-            this.главнаяToolStripMenuItem.Name = "главнаяToolStripMenuItem";
-            this.главнаяToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
-            this.главнаяToolStripMenuItem.Text = "Файл";
-            // 
-            // выходToolStripMenuItem
-            // 
-            this.выходToolStripMenuItem.Name = "выходToolStripMenuItem";
-            this.выходToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
-            this.выходToolStripMenuItem.Text = "Выход";
-            // 
-            // помощьToolStripMenuItem
-            // 
-            this.помощьToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.оПроектеToolStripMenuItem,
-            this.какРаботатьToolStripMenuItem});
-            this.помощьToolStripMenuItem.Name = "помощьToolStripMenuItem";
-            this.помощьToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
-            this.помощьToolStripMenuItem.Text = "Помощь";
-            // 
-            // оПроектеToolStripMenuItem
-            // 
-            this.оПроектеToolStripMenuItem.Name = "оПроектеToolStripMenuItem";
-            this.оПроектеToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.оПроектеToolStripMenuItem.Text = "О Проекте";
-            // 
-            // какРаботатьToolStripMenuItem
-            // 
-            this.какРаботатьToolStripMenuItem.Name = "какРаботатьToolStripMenuItem";
-            this.какРаботатьToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.какРаботатьToolStripMenuItem.Text = "Как работать?";
             // 
             // lblServerUrl
             // 
@@ -383,16 +336,63 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(49, 17);
             this.toolStripStatusLabel1.Text = "Статус: ";
             // 
+            // folderBrowser
+            // 
+            this.folderBrowser.RootFolder = System.Environment.SpecialFolder.MyComputer;
+            // 
+            // главнаяToolStripMenuItem
+            // 
+            this.главнаяToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.выходToolStripMenuItem});
+            this.главнаяToolStripMenuItem.Name = "главнаяToolStripMenuItem";
+            this.главнаяToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.главнаяToolStripMenuItem.Text = "Файл";
+            // 
+            // выходToolStripMenuItem
+            // 
+            this.выходToolStripMenuItem.Name = "выходToolStripMenuItem";
+            this.выходToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.выходToolStripMenuItem.Text = "Выход";
+            // 
+            // помощьToolStripMenuItem
+            // 
+            this.помощьToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.оПроектеToolStripMenuItem,
+            this.какРаботатьToolStripMenuItem});
+            this.помощьToolStripMenuItem.Name = "помощьToolStripMenuItem";
+            this.помощьToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
+            this.помощьToolStripMenuItem.Text = "Помощь";
+            // 
+            // оПроектеToolStripMenuItem
+            // 
+            this.оПроектеToolStripMenuItem.Name = "оПроектеToolStripMenuItem";
+            this.оПроектеToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.оПроектеToolStripMenuItem.Text = "О Проекте";
+            // 
+            // какРаботатьToolStripMenuItem
+            // 
+            this.какРаботатьToolStripMenuItem.Name = "какРаботатьToolStripMenuItem";
+            this.какРаботатьToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.какРаботатьToolStripMenuItem.Text = "Как работать?";
+            // 
+            // mainMenu
+            // 
+            this.mainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.главнаяToolStripMenuItem,
+            this.помощьToolStripMenuItem});
+            this.mainMenu.Location = new System.Drawing.Point(0, 0);
+            this.mainMenu.Name = "mainMenu";
+            this.mainMenu.Padding = new System.Windows.Forms.Padding(7, 2, 0, 2);
+            this.mainMenu.Size = new System.Drawing.Size(1054, 24);
+            this.mainMenu.TabIndex = 0;
+            this.mainMenu.Text = "Главное меню";
+            // 
             // progressBar
             // 
             this.progressBar.Location = new System.Drawing.Point(386, 99);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(258, 23);
             this.progressBar.TabIndex = 19;
-            // 
-            // folderBrowser
-            // 
-            this.folderBrowser.RootFolder = System.Environment.SpecialFolder.MyComputer;
             // 
             // MainForm
             // 
@@ -425,25 +425,18 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Simple FTP Client";
             this.Load += new System.EventHandler(this.MainForm_Load);
-            this.mainMenu.ResumeLayout(false);
-            this.mainMenu.PerformLayout();
             this.cmsLocal.ResumeLayout(false);
             this.cmsRemote.ResumeLayout(false);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
+            this.mainMenu.ResumeLayout(false);
+            this.mainMenu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.MenuStrip mainMenu;
-        private System.Windows.Forms.ToolStripMenuItem главнаяToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem выходToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem помощьToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem оПроектеToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem какРаботатьToolStripMenuItem;
         private System.Windows.Forms.Label lblServerUrl;
         private System.Windows.Forms.Label lblUserName;
         private System.Windows.Forms.Label lblUserPass;
@@ -473,8 +466,14 @@
         private System.Windows.Forms.ToolStripMenuItem cmsRemoteMove;
         private System.Windows.Forms.ToolStripMenuItem cmsRemoteDelete;
         private System.Windows.Forms.ToolStripMenuItem cmsRemoteCreateFolder;
-        private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.FolderBrowserDialog folderBrowser;
+        private System.Windows.Forms.ToolStripMenuItem главнаяToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem выходToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem помощьToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem оПроектеToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem какРаботатьToolStripMenuItem;
+        private System.Windows.Forms.MenuStrip mainMenu;
+        private System.Windows.Forms.ProgressBar progressBar;
     }
 }
 
