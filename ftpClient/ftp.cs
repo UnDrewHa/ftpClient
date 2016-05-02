@@ -25,6 +25,7 @@ namespace ftpClient {
 
         private string _username = "";
         private string _password = "";
+        private bool _download = false;
 
         #region События
         void OnDownloadComplete(string filename) {
@@ -110,6 +111,11 @@ namespace ftpClient {
             context = SynchronizationContext.Current;
 
             return browse(host);
+        }
+
+        public void stopProcess (bool download)
+        {
+            this._download = download;
         }
 
         public string deleteFile(string path) {
@@ -314,8 +320,14 @@ namespace ftpClient {
                     fs.Write(buffer, 0, readCount);
                     readCount = rs.Read(buffer, 0, bufferSize);
                     OnDownloadProgress(file.completeFileName, 66, fileSize);
+                    if (_download)
+                        break;
                 }
                 OnDownloadComplete(file.completeFileName);
+            }
+            catch (EndOfStreamException ex)
+            {
+                Console.WriteLine(ex.Message);
             }
             catch (Exception ex)
             {
@@ -350,6 +362,9 @@ namespace ftpClient {
                         totBytes += read;
                         OnUploadProgress(file.completeFileName, totBytes);
                         Console.WriteLine("Загружено:" + totBytes);
+                        OnUploadProgress(file.completeFileName, totBytes);
+                        if (_download)
+                            break;
                     } while (read == bufferSize);
                     OnUploadComplete(file.completeFileName);
                 }

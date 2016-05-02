@@ -174,12 +174,13 @@ namespace ftpClient {
 
         public void startProcessing() {
             _threadRunning = true;
-            Console.WriteLine("Started download/upload");
             ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadForProcessQueue));
         }
 
         public void stopProcessing() {
-            _threadRunning = false;
+                _threadRunning = false;
+                queue.Clear();
+            ftpObject.stopProcess(true);
         }
 
         private void ThreadForProcessQueue(object stateInfo) {

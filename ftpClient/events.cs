@@ -25,6 +25,7 @@ namespace ftpClient {
         public int totalBytes;
     }
 
+
     public class uploadProgressEventArgs : EventArgs {
         public string filename;
         public long bytesTransferred;

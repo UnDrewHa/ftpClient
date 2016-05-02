@@ -33,10 +33,26 @@
             this.tboxUserPass = new System.Windows.Forms.TextBox();
             this.btnConnect = new System.Windows.Forms.Button();
             this.lvLocal = new System.Windows.Forms.ListView();
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cmsLocal = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmsLocalUpload = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmsLocalRename = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmsLocalMove = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmsLocalDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmsLocalCreateFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.lvRemote = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cmsRemote = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmsRemoteDownload = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmsRemoteRename = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmsRemoteMove = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmsRemoteDelete = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmsRemoteCreateFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.btnUpLocal = new System.Windows.Forms.Button();
@@ -49,6 +65,8 @@
             this.logo = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.header = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -56,30 +74,13 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.mainTab = new System.Windows.Forms.Panel();
+            this.statusBar = new System.Windows.Forms.TextBox();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.label8 = new System.Windows.Forms.Label();
             this.works = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
             this.about = new System.Windows.Forms.Panel();
-            this.statusBar = new System.Windows.Forms.TextBox();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.cmsLocalUpload = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsLocalRename = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsLocalMove = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsLocalDelete = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsLocalCreateFolder = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsRemoteDownload = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsRemoteRename = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsRemoteMove = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsRemoteDelete = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsRemoteCreateFolder = new System.Windows.Forms.ToolStripMenuItem();
+            this.lblCancel = new System.Windows.Forms.ToolStripStatusLabel();
             this.cmsLocal.SuspendLayout();
             this.cmsRemote.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -200,6 +201,21 @@
             this.lvLocal.View = System.Windows.Forms.View.Details;
             this.lvLocal.DoubleClick += new System.EventHandler(this.lvLocal_DoubleClick);
             // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Text = "Имя";
+            this.columnHeader4.Width = 262;
+            // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Text = "Размер";
+            this.columnHeader5.Width = 62;
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "Дата изменения";
+            this.columnHeader6.Width = 111;
+            // 
             // cmsLocal
             // 
             this.cmsLocal.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -210,6 +226,46 @@
             this.cmsLocalCreateFolder});
             this.cmsLocal.Name = "cmsLocal";
             this.cmsLocal.Size = new System.Drawing.Size(162, 114);
+            // 
+            // cmsLocalUpload
+            // 
+            this.cmsLocalUpload.Image = global::ftpClient.Properties.Resources.Upload_to_the_Cloud1;
+            this.cmsLocalUpload.Name = "cmsLocalUpload";
+            this.cmsLocalUpload.Size = new System.Drawing.Size(161, 22);
+            this.cmsLocalUpload.Text = "На сервер";
+            this.cmsLocalUpload.Click += new System.EventHandler(this.cmsLocalUpload_Click);
+            // 
+            // cmsLocalRename
+            // 
+            this.cmsLocalRename.Image = global::ftpClient.Properties.Resources.Edit1;
+            this.cmsLocalRename.Name = "cmsLocalRename";
+            this.cmsLocalRename.Size = new System.Drawing.Size(161, 22);
+            this.cmsLocalRename.Text = "Переименовать";
+            this.cmsLocalRename.Click += new System.EventHandler(this.cmsLocalRename_Click);
+            // 
+            // cmsLocalMove
+            // 
+            this.cmsLocalMove.Image = global::ftpClient.Properties.Resources.External_Link;
+            this.cmsLocalMove.Name = "cmsLocalMove";
+            this.cmsLocalMove.Size = new System.Drawing.Size(161, 22);
+            this.cmsLocalMove.Text = "Переместить";
+            this.cmsLocalMove.Click += new System.EventHandler(this.cmsLocalMove_Click);
+            // 
+            // cmsLocalDelete
+            // 
+            this.cmsLocalDelete.Image = global::ftpClient.Properties.Resources.Delete1;
+            this.cmsLocalDelete.Name = "cmsLocalDelete";
+            this.cmsLocalDelete.Size = new System.Drawing.Size(161, 22);
+            this.cmsLocalDelete.Text = "Удалить";
+            this.cmsLocalDelete.Click += new System.EventHandler(this.cmsLocalDelete_Click);
+            // 
+            // cmsLocalCreateFolder
+            // 
+            this.cmsLocalCreateFolder.Image = global::ftpClient.Properties.Resources.Plus1;
+            this.cmsLocalCreateFolder.Name = "cmsLocalCreateFolder";
+            this.cmsLocalCreateFolder.Size = new System.Drawing.Size(161, 22);
+            this.cmsLocalCreateFolder.Text = "Создать папку";
+            this.cmsLocalCreateFolder.Click += new System.EventHandler(this.cmsLocalCreateFolder_Click);
             // 
             // imageList1
             // 
@@ -242,6 +298,21 @@
             this.lvRemote.View = System.Windows.Forms.View.Details;
             this.lvRemote.DoubleClick += new System.EventHandler(this.lvRemote_DoubleClick);
             // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Имя";
+            this.columnHeader1.Width = 232;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Размер";
+            this.columnHeader2.Width = 97;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Дата изменения";
+            this.columnHeader3.Width = 104;
+            // 
             // cmsRemote
             // 
             this.cmsRemote.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -252,6 +323,46 @@
             this.cmsRemoteCreateFolder});
             this.cmsRemote.Name = "cmsRemote";
             this.cmsRemote.Size = new System.Drawing.Size(162, 114);
+            // 
+            // cmsRemoteDownload
+            // 
+            this.cmsRemoteDownload.Image = global::ftpClient.Properties.Resources.Download_from_the_Cloud1;
+            this.cmsRemoteDownload.Name = "cmsRemoteDownload";
+            this.cmsRemoteDownload.Size = new System.Drawing.Size(161, 22);
+            this.cmsRemoteDownload.Text = "Скачать";
+            this.cmsRemoteDownload.Click += new System.EventHandler(this.cmsRemoteDownload_Click);
+            // 
+            // cmsRemoteRename
+            // 
+            this.cmsRemoteRename.Image = global::ftpClient.Properties.Resources.Edit1;
+            this.cmsRemoteRename.Name = "cmsRemoteRename";
+            this.cmsRemoteRename.Size = new System.Drawing.Size(161, 22);
+            this.cmsRemoteRename.Text = "Переименовать";
+            this.cmsRemoteRename.Click += new System.EventHandler(this.cmsRemoteRename_Click);
+            // 
+            // cmsRemoteMove
+            // 
+            this.cmsRemoteMove.Image = global::ftpClient.Properties.Resources.External_Link;
+            this.cmsRemoteMove.Name = "cmsRemoteMove";
+            this.cmsRemoteMove.Size = new System.Drawing.Size(161, 22);
+            this.cmsRemoteMove.Text = "Переместить";
+            this.cmsRemoteMove.Click += new System.EventHandler(this.cmsRemoteMove_Click);
+            // 
+            // cmsRemoteDelete
+            // 
+            this.cmsRemoteDelete.Image = global::ftpClient.Properties.Resources.Delete1;
+            this.cmsRemoteDelete.Name = "cmsRemoteDelete";
+            this.cmsRemoteDelete.Size = new System.Drawing.Size(161, 22);
+            this.cmsRemoteDelete.Text = "Удалить";
+            this.cmsRemoteDelete.Click += new System.EventHandler(this.cmsRemoteDelete_Click);
+            // 
+            // cmsRemoteCreateFolder
+            // 
+            this.cmsRemoteCreateFolder.Image = global::ftpClient.Properties.Resources.Plus1;
+            this.cmsRemoteCreateFolder.Name = "cmsRemoteCreateFolder";
+            this.cmsRemoteCreateFolder.Size = new System.Drawing.Size(161, 22);
+            this.cmsRemoteCreateFolder.Text = "Создать папку";
+            this.cmsRemoteCreateFolder.Click += new System.EventHandler(this.cmsRemoteCreateFolder_Click);
             // 
             // label1
             // 
@@ -332,7 +443,8 @@
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.progressBar});
+            this.progressBar,
+            this.lblCancel});
             this.statusStrip.Location = new System.Drawing.Point(0, 645);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(1000, 25);
@@ -389,6 +501,28 @@
             this.header.Name = "header";
             this.header.Size = new System.Drawing.Size(800, 50);
             this.header.TabIndex = 20;
+            // 
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.Transparent;
+            this.panel5.BackgroundImage = global::ftpClient.Properties.Resources.minim1;
+            this.panel5.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panel5.Location = new System.Drawing.Point(745, 19);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(15, 15);
+            this.panel5.TabIndex = 18;
+            this.panel5.Click += new System.EventHandler(this.panel5_Click);
+            // 
+            // panel4
+            // 
+            this.panel4.BackColor = System.Drawing.Color.Transparent;
+            this.panel4.BackgroundImage = global::ftpClient.Properties.Resources.close1;
+            this.panel4.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.panel4.Location = new System.Drawing.Point(775, 18);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(13, 13);
+            this.panel4.TabIndex = 17;
+            this.panel4.Click += new System.EventHandler(this.panel4_Click);
             // 
             // label6
             // 
@@ -482,6 +616,21 @@
             this.mainTab.TabIndex = 21;
             this.mainTab.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mainTab_MouseDown);
             // 
+            // statusBar
+            // 
+            this.statusBar.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.statusBar.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.statusBar.Font = new System.Drawing.Font("Courier New", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.statusBar.ForeColor = System.Drawing.Color.DarkSlateGray;
+            this.statusBar.Location = new System.Drawing.Point(46, 594);
+            this.statusBar.Margin = new System.Windows.Forms.Padding(0);
+            this.statusBar.Multiline = true;
+            this.statusBar.Name = "statusBar";
+            this.statusBar.ReadOnly = true;
+            this.statusBar.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.statusBar.Size = new System.Drawing.Size(900, 30);
+            this.statusBar.TabIndex = 16;
+            // 
             // notifyIcon1
             // 
             this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
@@ -529,152 +678,15 @@
             this.about.TabIndex = 0;
             this.about.MouseDown += new System.Windows.Forms.MouseEventHandler(this.about_MouseDown);
             // 
-            // statusBar
+            // lblCancel
             // 
-            this.statusBar.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.statusBar.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.statusBar.Font = new System.Drawing.Font("Courier New", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.statusBar.ForeColor = System.Drawing.Color.DarkSlateGray;
-            this.statusBar.Location = new System.Drawing.Point(46, 594);
-            this.statusBar.Margin = new System.Windows.Forms.Padding(0);
-            this.statusBar.Multiline = true;
-            this.statusBar.Name = "statusBar";
-            this.statusBar.ReadOnly = true;
-            this.statusBar.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.statusBar.Size = new System.Drawing.Size(900, 30);
-            this.statusBar.TabIndex = 16;
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "Имя";
-            this.columnHeader1.Width = 232;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Размер";
-            this.columnHeader2.Width = 97;
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "Дата изменения";
-            this.columnHeader3.Width = 104;
-            // 
-            // columnHeader4
-            // 
-            this.columnHeader4.Text = "Имя";
-            this.columnHeader4.Width = 262;
-            // 
-            // columnHeader5
-            // 
-            this.columnHeader5.Text = "Размер";
-            this.columnHeader5.Width = 62;
-            // 
-            // columnHeader6
-            // 
-            this.columnHeader6.Text = "Дата изменения";
-            this.columnHeader6.Width = 111;
-            // 
-            // panel5
-            // 
-            this.panel5.BackColor = System.Drawing.Color.Transparent;
-            this.panel5.BackgroundImage = global::ftpClient.Properties.Resources.minim1;
-            this.panel5.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panel5.Location = new System.Drawing.Point(745, 19);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(15, 15);
-            this.panel5.TabIndex = 18;
-            this.panel5.Click += new System.EventHandler(this.panel5_Click);
-            // 
-            // panel4
-            // 
-            this.panel4.BackColor = System.Drawing.Color.Transparent;
-            this.panel4.BackgroundImage = global::ftpClient.Properties.Resources.close1;
-            this.panel4.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panel4.Location = new System.Drawing.Point(775, 18);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(13, 13);
-            this.panel4.TabIndex = 17;
-            this.panel4.Click += new System.EventHandler(this.panel4_Click);
-            // 
-            // cmsLocalUpload
-            // 
-            this.cmsLocalUpload.Image = global::ftpClient.Properties.Resources.Upload_to_the_Cloud1;
-            this.cmsLocalUpload.Name = "cmsLocalUpload";
-            this.cmsLocalUpload.Size = new System.Drawing.Size(161, 22);
-            this.cmsLocalUpload.Text = "На сервер";
-            this.cmsLocalUpload.Click += new System.EventHandler(this.cmsLocalUpload_Click);
-            // 
-            // cmsLocalRename
-            // 
-            this.cmsLocalRename.Image = global::ftpClient.Properties.Resources.Edit1;
-            this.cmsLocalRename.Name = "cmsLocalRename";
-            this.cmsLocalRename.Size = new System.Drawing.Size(161, 22);
-            this.cmsLocalRename.Text = "Переименовать";
-            this.cmsLocalRename.Click += new System.EventHandler(this.cmsLocalRename_Click);
-            // 
-            // cmsLocalMove
-            // 
-            this.cmsLocalMove.Image = global::ftpClient.Properties.Resources.External_Link;
-            this.cmsLocalMove.Name = "cmsLocalMove";
-            this.cmsLocalMove.Size = new System.Drawing.Size(161, 22);
-            this.cmsLocalMove.Text = "Переместить";
-            this.cmsLocalMove.Click += new System.EventHandler(this.cmsLocalMove_Click);
-            // 
-            // cmsLocalDelete
-            // 
-            this.cmsLocalDelete.Image = global::ftpClient.Properties.Resources.Delete1;
-            this.cmsLocalDelete.Name = "cmsLocalDelete";
-            this.cmsLocalDelete.Size = new System.Drawing.Size(161, 22);
-            this.cmsLocalDelete.Text = "Удалить";
-            this.cmsLocalDelete.Click += new System.EventHandler(this.cmsLocalDelete_Click);
-            // 
-            // cmsLocalCreateFolder
-            // 
-            this.cmsLocalCreateFolder.Image = global::ftpClient.Properties.Resources.Plus1;
-            this.cmsLocalCreateFolder.Name = "cmsLocalCreateFolder";
-            this.cmsLocalCreateFolder.Size = new System.Drawing.Size(161, 22);
-            this.cmsLocalCreateFolder.Text = "Создать папку";
-            this.cmsLocalCreateFolder.Click += new System.EventHandler(this.cmsLocalCreateFolder_Click);
-            // 
-            // cmsRemoteDownload
-            // 
-            this.cmsRemoteDownload.Image = global::ftpClient.Properties.Resources.Download_from_the_Cloud1;
-            this.cmsRemoteDownload.Name = "cmsRemoteDownload";
-            this.cmsRemoteDownload.Size = new System.Drawing.Size(161, 22);
-            this.cmsRemoteDownload.Text = "Скачать";
-            this.cmsRemoteDownload.Click += new System.EventHandler(this.cmsRemoteDownload_Click);
-            // 
-            // cmsRemoteRename
-            // 
-            this.cmsRemoteRename.Image = global::ftpClient.Properties.Resources.Edit1;
-            this.cmsRemoteRename.Name = "cmsRemoteRename";
-            this.cmsRemoteRename.Size = new System.Drawing.Size(161, 22);
-            this.cmsRemoteRename.Text = "Переименовать";
-            this.cmsRemoteRename.Click += new System.EventHandler(this.cmsRemoteRename_Click);
-            // 
-            // cmsRemoteMove
-            // 
-            this.cmsRemoteMove.Image = global::ftpClient.Properties.Resources.External_Link;
-            this.cmsRemoteMove.Name = "cmsRemoteMove";
-            this.cmsRemoteMove.Size = new System.Drawing.Size(161, 22);
-            this.cmsRemoteMove.Text = "Переместить";
-            this.cmsRemoteMove.Click += new System.EventHandler(this.cmsRemoteMove_Click);
-            // 
-            // cmsRemoteDelete
-            // 
-            this.cmsRemoteDelete.Image = global::ftpClient.Properties.Resources.Delete1;
-            this.cmsRemoteDelete.Name = "cmsRemoteDelete";
-            this.cmsRemoteDelete.Size = new System.Drawing.Size(161, 22);
-            this.cmsRemoteDelete.Text = "Удалить";
-            this.cmsRemoteDelete.Click += new System.EventHandler(this.cmsRemoteDelete_Click);
-            // 
-            // cmsRemoteCreateFolder
-            // 
-            this.cmsRemoteCreateFolder.Image = global::ftpClient.Properties.Resources.Plus1;
-            this.cmsRemoteCreateFolder.Name = "cmsRemoteCreateFolder";
-            this.cmsRemoteCreateFolder.Size = new System.Drawing.Size(161, 22);
-            this.cmsRemoteCreateFolder.Text = "Создать папку";
-            this.cmsRemoteCreateFolder.Click += new System.EventHandler(this.cmsRemoteCreateFolder_Click);
+            this.lblCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.lblCancel.BorderStyle = System.Windows.Forms.Border3DStyle.SunkenOuter;
+            this.lblCancel.Image = global::ftpClient.Properties.Resources.Cancel1;
+            this.lblCancel.Name = "lblCancel";
+            this.lblCancel.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
+            this.lblCancel.Size = new System.Drawing.Size(21, 20);
+            this.lblCancel.Click += new System.EventHandler(this.lblCancel_Click);
             // 
             // MainForm
             // 
@@ -776,6 +788,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader6;
+        private System.Windows.Forms.ToolStripStatusLabel lblCancel;
     }
 }
 

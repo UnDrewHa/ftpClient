@@ -32,6 +32,7 @@ namespace ftpClient {
             ftpSet.ftpObject.uploadComplete += new EventHandler<uploadCompleteEventArgs>(ftpobject_uploadComplete);
             ftpSet.ftpObject.deleteComplete += new EventHandler<deleteCompleteEventArgs>(ftpobject_deleteComplete);
             ftpSet.ftpObject.mkDirRemoteComplete += new EventHandler<mkDirRemoteCompleteEventArgs>(ftpobject_mkDirRemoteComplete);
+            ftpSet.ftpObject.uploadProgress += new EventHandler<uploadProgressEventArgs>(ftpobject_uploadProgress);
             FileSystemWatcher fsWatcher = new FileSystemWatcher();
             fsWatcher.Path = lblLocalPath.Text;
             fsWatcher.NotifyFilter = NotifyFilters.FileName;
@@ -44,28 +45,28 @@ namespace ftpClient {
 
         void fsOnChanged(object source, FileSystemEventArgs e)
         {
-            // Specify what is done when a file is changed, created, or deleted.
-            //statusBar.Text = "File: " + e.FullPath + " " + e.ChangeType;
-            
-            
+            statusBar.Invoke(new Action(() => { statusBar.Text = "File: " + e.FullPath + " " + e.ChangeType; }));
+            lvLocal.Invoke(new Action(() => { refreshLocal();  }));
+
+
         }
         void fsOnCreated(object source, FileSystemEventArgs e)
         {
-            // Specify what is done when a file is changed, created, or deleted.
-            //statusBar.Text = "File: " + e.FullPath + " " + e.ChangeType;
-            
+            statusBar.Invoke(new Action(() => { statusBar.Text = "File: " + e.FullPath + " " + e.ChangeType; }));
+            lvLocal.Invoke(new Action(() => { refreshLocal(); }));
+
         }
         void fsOnDeleted(object source, FileSystemEventArgs e)
         {
-            // Specify what is done when a file is changed, created, or deleted.
-            //statusBar.Text = "File: " + e.FullPath + " " + e.ChangeType;
-            
+            statusBar.Invoke(new Action(() => { statusBar.Text = "File: " + e.FullPath + " " + e.ChangeType; }));
+            lvLocal.Invoke(new Action(() => { refreshLocal(); }));
+
         }
         void fsOnRenamed(object source, FileSystemEventArgs e)
         {
-            // Specify what is done when a file is changed, created, or deleted.
-            //statusBar.Text = "File: " + e.FullPath + " " + e.ChangeType;
-            
+            statusBar.Invoke(new Action(() => { statusBar.Text = "File: " + e.FullPath + " " + e.ChangeType; }));
+            lvLocal.Invoke(new Action(() => { refreshLocal(); }));
+
         }
 
         void ftpobject_downloadProgress(object sender, downloadProgressEventArgs e)
@@ -73,6 +74,12 @@ namespace ftpClient {
             progressBar.Style = ProgressBarStyle.Marquee;
 
         }
+        void ftpobject_uploadProgress(object sender, uploadProgressEventArgs e)
+                {
+                    progressBar.Style = ProgressBarStyle.Marquee;
+
+                }
+
         void ftpobject_mkDirRemoteComplete(object sender, mkDirRemoteCompleteEventArgs e) {
             statusBar.Text = "Папка создана: " + e.filename + Environment.NewLine + statusBar.Text;
             refreshRemote();
@@ -124,18 +131,26 @@ namespace ftpClient {
             lvLocal.Items.Clear();
 
             DirectoryInfo di = new DirectoryInfo(lblLocalPath.Text);
-
-            foreach (DirectoryInfo dri in di.GetDirectories()) {
-                string date = di.CreationTime.ToString();
-                string size = "";
-                string[] sub = new string[] { size, date };
-                lvLocal.Items.Add(dri.Name, (int)directionEntryTypes.directory).SubItems.AddRange(sub);
+            try
+            {
+                foreach (DirectoryInfo dri in di.GetDirectories())
+                {
+                    string date = di.CreationTime.ToString();
+                    string size = "";
+                    string[] sub = new string[] { size, date };
+                    lvLocal.Items.Add(dri.Name, (int)directionEntryTypes.directory).SubItems.AddRange(sub);
+                }
+                foreach (FileInfo fi in di.GetFiles())
+                {
+                    string size = GetFileSize(fi.Length);
+                    string date = fi.LastWriteTime.ToString();
+                    string[] sub = new string[] { size, date };
+                    lvLocal.Items.Add(fi.Name, (int)directionEntryTypes.file).SubItems.AddRange(sub);
+                }
             }
-            foreach (FileInfo fi in di.GetFiles()) {
-                string size = GetFileSize(fi.Length);
-                string date = fi.LastWriteTime.ToString();
-                string[] sub = new string[] { size, date };
-                lvLocal.Items.Add(fi.Name, (int)directionEntryTypes.file).SubItems.AddRange(sub);
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка отображения");
             }
             }
 
@@ -179,7 +194,6 @@ namespace ftpClient {
 
         private void listRemoteFiles(List<ftpinfo> files) {
             lvRemote.Items.Clear();
-            //lvwRemote.Items.Add("..");
             if (files == null)
                 return;
             string blah = "";
@@ -241,19 +255,25 @@ namespace ftpClient {
                 return;
             string localPath = "";
             if (folderBrowser.ShowDialog() == DialogResult.OK)
+            {
                 localPath = folderBrowser.SelectedPath;
-            if (lvRemote.SelectedItems[0].ImageIndex == (int)directionEntryTypes.file) {
-                string filename = lvRemote.SelectedItems[0].Text;
-                if (lblRemotePath.Text == "/")
-                    ftpSet.addFileToDownloadQueue(tboxServerUrl.Text + lblRemotePath.Text + filename, localPath + @"\" + filename);
-                else
-                    ftpSet.addFileToDownloadQueue(tboxServerUrl.Text + lblRemotePath.Text + "/" + filename, localPath + @"\" + filename);
-                ftpSet.startProcessing();
-            } else if (lvRemote.SelectedItems[0].ImageIndex == (int)directionEntryTypes.directory) {
-                string filename = lvRemote.SelectedItems[0].Text;
-                ftpSet.addFolderToDownloadQueue(tboxServerUrl.Text + lblRemotePath.Text + "/" + filename, localPath + @"\" + filename);
-                ftpSet.startProcessing();
+                if (lvRemote.SelectedItems[0].ImageIndex == (int)directionEntryTypes.file)
+                {
+                    string filename = lvRemote.SelectedItems[0].Text;
+                    if (lblRemotePath.Text == "/")
+                        ftpSet.addFileToDownloadQueue(tboxServerUrl.Text + lblRemotePath.Text + filename, localPath + @"\" + filename);
+                    else
+                        ftpSet.addFileToDownloadQueue(tboxServerUrl.Text + lblRemotePath.Text + "/" + filename, localPath + @"\" + filename);
+                    ftpSet.startProcessing();
+                }
+                else if (lvRemote.SelectedItems[0].ImageIndex == (int)directionEntryTypes.directory)
+                {
+                    string filename = lvRemote.SelectedItems[0].Text;
+                    ftpSet.addFolderToDownloadQueue(tboxServerUrl.Text + lblRemotePath.Text + "/" + filename, localPath + @"\" + filename);
+                    ftpSet.startProcessing();
+                }
             }
+                
         }
 
         private void cmsRemoteDelete_Click(object sender, EventArgs e) {
@@ -727,6 +747,11 @@ namespace ftpClient {
                 ReleaseCapture();
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
+        }
+
+        private void lblCancel_Click(object sender, EventArgs e)
+        {
+            ftpSet.stopProcessing();
         }
     }
 }
