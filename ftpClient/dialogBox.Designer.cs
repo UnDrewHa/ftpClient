@@ -46,11 +46,11 @@
             // btnCreate
             // 
             this.btnCreate.AutoSize = true;
-            this.btnCreate.BackColor = System.Drawing.Color.DimGray;
+            this.btnCreate.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnCreate.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnCreate.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnCreate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCreate.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.btnCreate.ForeColor = System.Drawing.Color.DimGray;
             this.btnCreate.Location = new System.Drawing.Point(37, 12);
             this.btnCreate.Margin = new System.Windows.Forms.Padding(0);
             this.btnCreate.Name = "btnCreate";
@@ -74,11 +74,11 @@
             // button1
             // 
             this.button1.AutoSize = true;
-            this.button1.BackColor = System.Drawing.Color.DimGray;
+            this.button1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.button1.ForeColor = System.Drawing.Color.DimGray;
             this.button1.Location = new System.Drawing.Point(161, 12);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 25);
@@ -100,7 +100,7 @@
             // 
             // panel2
             // 
-            this.panel2.BackColor = System.Drawing.Color.Gray;
+            this.panel2.BackColor = System.Drawing.Color.Tomato;
             this.panel2.Controls.Add(this.btnCreate);
             this.panel2.Controls.Add(this.button1);
             this.panel2.Location = new System.Drawing.Point(-1, 121);

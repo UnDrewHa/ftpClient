@@ -23,6 +23,8 @@ namespace ftpClient {
         public static extern bool ReleaseCapture();
 
         ftper ftpSet = new ftper();
+        FileSystemWatcher fsWatcher = new FileSystemWatcher();
+        
         public MainForm() {
             InitializeComponent();
 
@@ -33,7 +35,6 @@ namespace ftpClient {
             ftpSet.ftpObject.deleteComplete += new EventHandler<deleteCompleteEventArgs>(ftpobject_deleteComplete);
             ftpSet.ftpObject.mkDirRemoteComplete += new EventHandler<mkDirRemoteCompleteEventArgs>(ftpobject_mkDirRemoteComplete);
             ftpSet.ftpObject.uploadProgress += new EventHandler<uploadProgressEventArgs>(ftpobject_uploadProgress);
-            FileSystemWatcher fsWatcher = new FileSystemWatcher();
             fsWatcher.Path = lblLocalPath.Text;
             fsWatcher.NotifyFilter = NotifyFilters.FileName;
             fsWatcher.Changed += new FileSystemEventHandler(fsOnChanged);
@@ -128,6 +129,7 @@ namespace ftpClient {
         }
 
         private void refreshLocal() {
+            fsWatcher.Path = lblLocalPath.Text;
             lvLocal.Items.Clear();
 
             DirectoryInfo di = new DirectoryInfo(lblLocalPath.Text);
